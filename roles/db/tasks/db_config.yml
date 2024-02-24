@@ -1,0 +1,38 @@
+---
+
+#########################CREATE DATABASE#########################
+
+- name: Change postgresql.conf
+  lineinfile:
+      path: "{{ db_conf }}"
+      regexp: '^#listen_addresses ='
+      line: "{{ db_conf_value }}"
+
+- name: Change pg_hba.conf
+  lineinfile:
+    path: "{{ db_hba_conf }}"
+    line: "{{ db_hba_value }}"
+    insertafter: EOF
+
+- name: Create PostgreSQL database
+  postgresql_db:
+    name: "{{ db_name }}"
+    state: present
+  become_user: postgres
+
+- name: Create PostgreSQL user
+  postgresql_user:
+    name: "{{ db_user }}"
+    password: "{{ db_pass }}"
+    state: present
+  become_user: postgres
+
+- name: Grant db user access to app db
+  postgresql_privs:
+    type: database
+    database: "{{ db_name }}"
+    roles: "{{ db_user }}"
+    privs: all
+    state: present
+  become_user: postgres
+  notify: Restart PostgreSQL

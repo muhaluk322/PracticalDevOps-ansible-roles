@@ -1,0 +1,12 @@
+---
+
+# DB vaules
+
+db_host:        "localhost"
+db_name:        "deffauldb"
+db_user:        "user1"
+db_pass:        "mypass"
+
+# PATH
+
+repo_path:      "/app-for-devops"

@@ -1,0 +1,15 @@
+---
+- name:  Configure DATABASE
+  hosts: db
+  become: yes
+
+  roles: 
+    - role: db
+
+- name: Install and configure Apache
+  hosts: server
+  become: yes
+
+  roles: 
+    - role: server
+

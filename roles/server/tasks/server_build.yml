@@ -1,0 +1,69 @@
+---
+
+#####################REPO SETUP#########################
+
+- name: Clone Git repo
+  git:
+    repo: https://github.com/Practical-DevOps/app-for-devops.git
+    dest: "{{ repo_path }}"
+    force: true
+
+- name: Copy .env template to webserver
+  template:
+    src: env-default.j2
+    dest: "{{ repo_path }}/.env"
+
+- name: Composer Install
+  command: "sudo composer install --no-interaction"
+  args:
+    chdir: "{{ repo_path }}"
+
+- name: PHP artisan key:generate
+  command: "sudo php artisan key:generate"
+  args:
+    chdir: "{{ repo_path }}"
+
+- name: PHP artisan migrate
+  command: "sudo php artisan migrate --force"
+  args:
+    chdir: "{{ repo_path }}"
+
+- name: npm install
+  command: "sudo npm install"
+  args:
+    chdir: "{{ repo_path }}"
+
+- name: Run build
+  command: "sudo npm run build"
+  args:
+    chdir: "{{ repo_path }}"
+
+#####################CONFIG APACHE#########################
+
+- name: Allow Port 80 in Firewall
+  ufw:
+    rule: allow
+    port: 80
+    state: reloaded
+  become: true
+
+- name: Copy Apache configuration template
+  template:
+    src: 000-default.conf.j2
+    dest: /etc/apache2/sites-available/000-default.conf
+
+- name: Change ownership and permitions to www-data
+  file:
+    path: "{{ repo_path }}"
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: "0775"
+    recurse: true
+
+- name: Enable mod rewrite
+  apache2_module:
+     name: rewrite
+     state: present
+  notify: Restart Apache
+

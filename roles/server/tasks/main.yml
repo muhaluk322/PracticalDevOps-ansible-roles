@@ -1,0 +1,4 @@
+---
+
+- import_tasks: server_preinstall.yml
+- import_tasks: server_build.yml

@@ -1,0 +1,4 @@
+---
+
+- import_tasks: db_preinstall.yml
+- import_tasks: db_config.yml

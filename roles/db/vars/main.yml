@@ -1,0 +1,18 @@
+---
+
+# DB vaules
+
+#db_host:        "localhost"
+db_name:        "deffauldb"
+db_user:        "user1"
+db_pass:        "mypass"
+
+# Config path
+  
+db_conf:        "/etc/postgresql/14/main/postgresql.conf"
+db_hba_conf:    "/etc/postgresql/14/main/pg_hba.conf"
+
+# Line to chage
+
+db_conf_value:  "listen_addresses = '*'"
+db_hba_value:   "host    all             all             0.0.0.0/0             scram-sha-256"

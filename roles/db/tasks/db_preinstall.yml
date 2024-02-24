@@ -1,0 +1,33 @@
+---
+
+#########################INSTALL PACKAGES#########################
+
+- name: Update package lsit
+  apt:
+    update_cache: yes
+
+- name: Install Python package
+  apt:
+    name:
+      - python3-psycopg2
+      - libpq-dev
+    state: present
+
+- name: Install PostgreSQL
+  apt:
+    name: postgresql-14
+    state: present
+    update_cache: yes
+
+- name: DB started
+  service:
+    name: postgresql
+    enabled: true
+    state: started
+
+- name: Allow Port 5432 in Firewall
+  ufw:
+    rule: allow
+    port: 5432
+    state: reloaded
+  become: true
